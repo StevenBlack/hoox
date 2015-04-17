@@ -1,96 +1,72 @@
+##
+# Class AbstractHook is the highest-level hook class wherein all the common 
+# hook interfaces are defined.
+
 class AbstractHook
-	@oHook =  nil
 
-	def sethook( *args )
-		args.each { |arg| 
-			if @hook.nil?
-				@hook = arg
-			else
-				@hook.sethook( arg )
-			end
-		}
-	end  
+  ##
+  # The @oHook member is designed to hold other instances of this class, thus
+  # making all hooks potentially self-referential
 
-	def process( *args )
-		if preprocess( args )
-			execute( args )
-		end
+  @oHook =  nil
 
-		if ! @hook.nil?
-			@hook.process( args )
-		end
-		postprocess()
+  def sethook( *args )
+    args.each { |arg|
+      if @hook.nil?
+        case 
+        when arg.is_a?( AbstractHook )
+          @hook = arg
+        when arg.is_a?( String )
+          @hook = Kernel.const_get( arg ).new
+        end
+      else
+        @hook.sethook( arg )
+      end
+    }
+  end
 
-	end
+  def process( *args )
+    if preprocess( args )
+      execute( args )
+    end
 
-	def preprocess( *args )
-		# Override to implement whether this hook executes
-		true
-	end
+    if ! @hook.nil?
+      @hook.process( args )
+    end
+    postprocess( args )
 
-	def postprocess( *args )
+  end
 
-	end
+  def preprocess( *args )
+    # Override to implement whether this hook executes
+    true
+  end
 
-	def execute( *args )
+  def postprocess( *args )
 
-		# Implement the hook here
-	end
+  end
+
+  def execute( *args )
+    # Implement the hook here
+  end
 end
 
 class HookAnchor < AbstractHook
-	attr_accessor :ahook
+  attr_accessor :ahook
 
-	def initialize( *args )
-     self.ahook = [] # on object creation initialize this to an array
-	end
+  def initialize( *args )
+    self.ahook = [] # on object creation initialize this to an array
+    args.each { |arg|
+      self.ahook << arg
+    }
+  end
 
-	def execute( *args )
-		@ahook.each { | hook | 
-			hook.process( args )
-		}
-	end
+  def execute( *args )
+    @ahook.each { | hook |
+      if hook.is_a?( AbstractHook )
+        hook.process( args )
+      end
+    }
+  end
 end
 
-class TalkyHook < AbstractHook
-	def execute( *args )
-		puts self.class.name
-	end
-end
-
-class Hook1 < TalkyHook 
-	def initialize( *args )
-		puts "-------"
-		puts args.join( " " )
-	end
-end
-
-class Hook2 < TalkyHook 
-end
-
-class Hook3 < TalkyHook 
-end
-
-x = Hook1.new( "Hooks assigned discretely" )
-x.sethook( Hook2.new )
-x.sethook( Hook3.new )
-x.process
-
-
-y = Hook1.new( "Hooks assigned in batch" )
-y.sethook( Hook2.new , Hook3.new )
-y.process
-
-
-class TalkyAnchor < HookAnchor
-	def initialize( *args )
-		super args
-		puts "-------"
-		puts args.join( " " )
-	end
-end
-
-
-z = TalkyAnchor.new( "An anchor with a couple of hook chains" )
-z.ahook << x << y
-z.process
