@@ -55,14 +55,14 @@ class AbstractHook
 
   def sethook(*args)
     args.each { |arg|
+      return if arg.nil?
       arg = resolve_to_hook(arg)
-
+      return if arg.nil?  # Which it could be.
       case
-      when arg.nil?    # do nothing
       when @hook.nil?
         @hook = arg    # hook stays here
-      else
-        @hook.sethook(arg)   # hook is appended to the chain
+      when @hook.is_a?(AbstractHook)
+        @hook.sethook(arg)  # Delegate immediately
       end
     }
   end
@@ -82,9 +82,8 @@ class AbstractHook
         ret = tmp
       end
     end
-    return ret
+    ret
   end
-
 end
 
 ##
@@ -112,4 +111,3 @@ class HookAnchor < AbstractHook
     }
   end
 end
-
