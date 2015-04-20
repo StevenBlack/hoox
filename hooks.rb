@@ -1,19 +1,18 @@
-##
-# Class AbstractHook is the highest-level hook class wherein common
-# hook interfaces are defined.
-
+# Public: The highest-level self-referential and chainable hook class wherein 
+# common hook interfaces are defined.
+#
+# Examples
+#
+#   Hook.process(some_string)
+#   # => some_transformed_text
 class AbstractHook
 
-  ##
-  # The @oHook member is designed to hold other instances of this class,
-  # thus making all hooks potentially self-referential
-
+  # Internal: The @oHook member is designed to hold other instances of this 
+  # type, thus making all hooks potentially self-referential
   @oHook = nil
 
-  ##
-  # The main interface for hooks.  The process method delegates to this
+  # Public: The main method for hooks.  The process method delegates to this
   # instance's execute method, then delegates down the hook chain.
-
   def process(*args)
     if preprocess(args)
       execute(args)
@@ -25,34 +24,27 @@ class AbstractHook
     postprocess(args)
   end
 
-  ##
-  # This method fires before the execute method and ultimately determines
-  # if the execute method fires at all.
-
+  # Internal: The preprocess method fires before the execute method and 
+  # ultimately determines if the execute method fires at all.
   def preprocess(*args)
     # Override to implement whether this hook executes
     true
   end
 
-  ##
-  # This method fires after the hook chain processes returns.  This is a good
-  # place for cleanup code.
-
+  # Internal: The postprocess method fires after the hook chain processes 
+  # returns.  This is a good place for cleanup code.
   def postprocess(*args)
   end
 
-  ##
-  # This is where the meat of the hook lives.
 
+  # Internal: This is where the meat of the hook lives.
   def execute(*args)
     # Implement the hook here
   end
 
-  ##
-  # Add a hook reference to this hook.  If the hook member is nil, keep the
-  # reference here.  If the hook member is not nil, delegate the hook to its
-  # sethook method.
-
+  # Public: Add a hook reference to this hook.  If the hook member is nil, 
+  # keep the reference here.  If the hook member is not nil, delegate the 
+  # hook to its sethook method.
   def sethook(*args)
     args.each { |arg|
       return if arg.nil?
@@ -67,10 +59,8 @@ class AbstractHook
     }
   end
 
-  ##
-  # Pass it a hook instance or a string and, in the case of string, creates a
-  # hook of that class bame.
-
+  # Internal: Pass it a hook instance or a string and, in the case of string, 
+  # creates a hook of that class bame.
   def resolve_to_hook(arg)
     ret = nil
     case
@@ -86,10 +76,9 @@ class AbstractHook
   end
 end
 
-##
-# Class HookAnchor can carry several hook chains and can serve to anchor a
-# directed graph of hooks.
 
+# Public: HookAnchor can carry several hook chains and can serve to anchor a
+# directed graph of hooks.
 class HookAnchor < AbstractHook
   attr_accessor :ahook
 
@@ -103,6 +92,7 @@ class HookAnchor < AbstractHook
     }
   end
 
+  # Internal: Anchors execute by firing upon its array of hooks.
   def execute(*args)
     @ahook.each { | hook |
       if hook.is_a?(AbstractHook)
