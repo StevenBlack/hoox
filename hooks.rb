@@ -13,37 +13,39 @@ class AbstractHook
 
   # Public: The main method for hooks.  The process method delegates to this
   # instance's execute method, then delegates down the hook chain.
-  def process(*args)
-    if preprocess(args)
-      execute(args)
+  def process(arg)
+    ret = preprocess(arg)
+    if ret
+      ret = execute(ret)
     end
 
     if ! @hook.nil?
-      @hook.process(args)
+      ret=@hook.process(ret)
     end
-    postprocess(args)
+    postprocess(ret)
   end
 
   # Internal: The preprocess method fires before the execute method and
   # ultimately determines if the execute method fires at all.
-  def preprocess(*args)
+  def preprocess(arg)
     # Override to implement whether this hook executes
-    true
+    arg
   end
 
   # Internal: The postprocess method fires after the hook chain processes
   # returns.  This is a good place for cleanup code.
-  def postprocess(*args)
+  def postprocess(arg)
+    arg
   end
-
 
   # Internal: This is where the meat of the hook lives.
-  def execute(*args)
+  def execute(arg)
     # Implement the hook here
+    arg
   end
 
-  # Public: Add a hook reference to this hook.  If the hook member is nil, 
-  # keep the reference here.  If the hook member is not nil, delegate the 
+  # Public: Add a hook reference to this hook.  If the hook member is nil,
+  # keep the reference here.  If the hook member is not nil, delegate the
   # hook to its sethook method.
   def sethook(*args)
     args.each { |arg|
@@ -93,11 +95,14 @@ class HookAnchor < AbstractHook
   end
 
   # Internal: Anchors execute by firing upon its array of hooks.
-  def execute(*args)
+  def execute(arg)
     @ahook.each { | hook |
       if hook.is_a?(AbstractHook)
-        hook.process(args)
+        arg=hook.process(arg)
       end
     }
+    arg
+  end
+end
   end
 end
