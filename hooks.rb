@@ -1,4 +1,4 @@
-# Public: The highest-level self-referential and chainable hook class wherein 
+# Public: The highest-level self-referential and chainable hook class wherein
 # common hook interfaces are defined.
 #
 # Examples
@@ -7,7 +7,7 @@
 #   # => some_transformed_text
 class AbstractHook
 
-  # Internal: The @oHook member is designed to hold other instances of this 
+  # Internal: The @oHook member is designed to hold other instances of this
   # type, thus making all hooks potentially self-referential
   @oHook = nil
 
@@ -24,14 +24,14 @@ class AbstractHook
     postprocess(args)
   end
 
-  # Internal: The preprocess method fires before the execute method and 
+  # Internal: The preprocess method fires before the execute method and
   # ultimately determines if the execute method fires at all.
   def preprocess(*args)
     # Override to implement whether this hook executes
     true
   end
 
-  # Internal: The postprocess method fires after the hook chain processes 
+  # Internal: The postprocess method fires after the hook chain processes
   # returns.  This is a good place for cleanup code.
   def postprocess(*args)
   end
