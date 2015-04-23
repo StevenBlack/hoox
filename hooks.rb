@@ -104,5 +104,21 @@ class HookAnchor < AbstractHook
     arg
   end
 end
+
+# Public: ParserHooks specialize in processing text.
+class ParserHook < AbstractHook
+
+  # We cache what was passed-in
+  @content_in  = ""
+
+  def execute(arg)
+    @content_in = arg
+    new_content = self.parse(arg)
+    new_content == @content_in ? @content_in : @content_in.gsub!(new_content)
+  end
+
+  def parse(arg)
+    # implement me!
+    arg
   end
 end
