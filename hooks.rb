@@ -59,7 +59,7 @@ class AbstractHook
     }
   end
 
-  # Internal: Pass it a hook instance or a string and, in the case of string, 
+  # Internal: Pass it a hook instance or a string and, in the case of string,
   # creates a hook of that class bame.
   def resolve_to_hook(arg)
     ret = nil
