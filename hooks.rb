@@ -98,7 +98,7 @@ class HookAnchor < AbstractHook
   def execute(arg)
     @ahook.each { | hook |
       if hook.is_a?(AbstractHook)
-        arg=hook.process(arg)
+        arg.gsub!(hook.process(arg))
       end
     }
     arg
@@ -107,18 +107,14 @@ end
 
 # Public: ParserHooks specialize in processing text.
 class ParserHook < AbstractHook
-
-  # We cache what was passed-in
-  @content_in  = ""
-
-  def execute(arg)
-    @content_in = arg
-    new_content = self.parse(arg)
-    new_content == @content_in ? @content_in : @content_in.gsub!(new_content)
-  end
-
-  def parse(arg)
-    # implement me!
-    arg
+  # Public: The main method for ParserHooks.  We assume the argument is text.
+  def process(arg)
+    if  preprocess(arg)
+      arg.gsub!(execute(arg))
+    end
+    if ! @hook.nil?
+      arg.gsub!(arg,@hook.process(arg))
+    end
+    arg.gsub!(arg,postprocess(arg))
   end
 end
