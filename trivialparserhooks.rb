@@ -1,7 +1,7 @@
 require './hoox'
 
 # Public: A trivial parser hook
-class LowerHook < Hoox::AbstractHook
+class LowerHook < Hoox::ParserHook
   # Public: The main method for ParserHooks.  We assume the argument is text.
   def execute(arg)
     arg.downcase!
@@ -9,7 +9,7 @@ class LowerHook < Hoox::AbstractHook
 end
 
 # Public: A trivial parser hook
-class UpperHook < Hoox::AbstractHook
+class UpperHook < Hoox::ParserHook
   # Public: The main method for ParserHooks.  We assume the argument is text.
   def execute(arg)
     arg.upcase!
