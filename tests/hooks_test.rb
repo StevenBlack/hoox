@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require './hooks'
+require './hoox'
 
 class TestAnchor < Minitest::Test
 

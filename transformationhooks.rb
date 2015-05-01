@@ -1,4 +1,4 @@
-require './hooks'
+require './hoox'
 require 'securerandom'
 
 # Public: A parser hook to tokenize tab symbols before hook delegation

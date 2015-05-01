@@ -1,4 +1,4 @@
-require './hooks'
+require './hoox'
 
 # Public: A trivial parser hook
 class LowerHook < Hoox::AbstractHook
