@@ -20,7 +20,7 @@ class TestTrivialHooks < Minitest::Test
   	test_string = "Short, sharp, shocked"
   	@lower_hook.sethook( @upper_hook )
   	result1 = test_string.downcase.upcase
-    assert_equal( result1, @lowerhook.process( test_string ), "Last hook should 'win'")
+    assert_equal( result1, @lower_hook.process( test_string ), "Last hook should 'win'")
   end
 
 end
