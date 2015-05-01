@@ -4,9 +4,9 @@ require './hooks'
 class TestAnchor < Minitest::Test
 
   def setup
-    @vanillahook   = AbstractHook.new
-    @vanillaanchor = HookAnchor.new
-    @vanillaparser = ParserHook.new
+    @vanillahook   = Hoox::AbstractHook.new
+    @vanillaanchor = Hoox::HookAnchor.new
+    @vanillaparser = Hoox::ParserHook.new
   end
 
   # VANILLA HOOKS

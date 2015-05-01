@@ -2,7 +2,7 @@ require './hooks'
 require 'securerandom'
 
 # Public: A parser hook to tokenize tab symbols before hook delegation
-class TabHideHook < ParserHook
+class TabHideHook < Hoox::ParserHook
   def initialize
     # The token to substitite for tabs
     @tab_subst="~!~ "
@@ -24,7 +24,7 @@ class TabHideHook < ParserHook
 end
 
 # Oubllic: Hide all HTML tags from downstream hooks
-class HtmlTagToken < ParserHook
+class HtmlTagToken < Hoox::ParserHook
   def initialize
     # The token to substitite for tabs
     @matches      = Hash.new
