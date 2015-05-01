@@ -6,7 +6,7 @@ module Hoox
   #
   #   Hook.process(some_string)
   #   # => some_transformed_text
-  class AbstractHook
+  class Hook
 
     # Internal: The @oHook member is designed to hold other instances of this
     # type, thus making all hooks potentially self-referential
@@ -56,7 +56,7 @@ module Hoox
         case
         when @hook.nil?
           @hook = arg    # hook stays here
-        when @hook.is_a?(AbstractHook)
+        when @hook.is_a?(Hook)
           @hook.sethook(arg)  # Delegate immediately
         end
       }
@@ -67,11 +67,11 @@ module Hoox
     def resolve_to_hook(arg)
       ret = nil
       case
-      when arg.is_a?(AbstractHook)
+      when arg.is_a?(Hook)
         ret = arg
       when arg.is_a?(String) && Kernel.const_defined?(arg)
         tmp = Kernel.const_get(arg).new
-        if tmp.is_a?(AbstractHook)
+        if tmp.is_a?(Hook)
           ret = tmp
         end
       end
@@ -82,7 +82,7 @@ module Hoox
 
   # Public: HookAnchor can carry several hook chains and can serve to anchor a
   # directed graph of hooks.
-  class HookAnchor < AbstractHook
+  class Anchor < Hook
     attr_accessor :ahook
 
     def initialize(*args)
@@ -98,7 +98,7 @@ module Hoox
     # Internal: Anchors execute by firing upon its array of hooks.
     def execute(arg)
       @ahook.each { | hook |
-        if hook.is_a?(AbstractHook)
+        if hook.is_a?(Hook)
           arg.gsub!(hook.process(arg))
         end
       }
@@ -107,7 +107,7 @@ module Hoox
   end
 
   # Public: ParserHooks specialize in processing text.
-  class ParserHook < AbstractHook
+  class ParserHook < Hook
     # Public: The main method for ParserHooks.  We assume the argument is text.
     def process(arg)
       if  preprocess(arg)
