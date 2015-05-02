@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module Hoox
   # Public: The highest-level self-referential and chainable hook class wherein
   # common hook interfaces are defined.
@@ -117,6 +119,40 @@ module Hoox
         arg.gsub!(arg,@hook.process(arg))
       end
       arg.gsub!(arg,postprocess(arg))
+    end
+  end
+
+  # Publlic: Regex-based hider parser hook
+  class RegexHideParserhook < Hoox::ParserHook
+    @@token_prefix = " <!-- "
+    @@token_suffix = " --> "
+
+    def initialize(*args)
+      super(*args)
+      @matches      = Hash.new
+    end
+
+    # Remove all HTML tags
+    def preprocess(arg)
+      if @regex
+        next_match = arg[/#{@regex}/im ]
+        while next_match
+          next_token = SecureRandom.urlsafe_base64( 20 )
+          next_swap  = @@token_prefix + next_token + @@token_suffix
+          @matches[ next_token ] = next_match
+          arg.gsub!( next_match, next_swap )
+          next_match = arg[/#{@regex}/im ]
+        end
+      end
+      arg
+    end
+
+    # Restore all HTML tags
+    def postprocess(arg)
+      @matches.keys.each{ |k|
+        arg.gsub!( @@token_prefix + k + @@token_suffix, @matches[k] )
+      }
+      arg
     end
   end
 end
