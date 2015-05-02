@@ -1,1 +1,3 @@
 tests/assets/muck.rb
+*.webloc
+foo*.rb
