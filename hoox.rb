@@ -21,7 +21,7 @@ module Hoox
       end
 
       if ! @hook.nil?
-        ret=@hook.process(ret)
+        ret = @hook.process(ret)
       end
       postprocess(ret)
     end
