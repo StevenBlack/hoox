@@ -4,8 +4,9 @@ require './transformationhooks.rb'
 class TestTransformations < Minitest::Test
 
   def setup
-    @tab_hide_hook  = TabHideHook.new
-    @html_tag_token = HtmlTagToken.new
+    @tab_hide_hook     = TabHideHook.new
+    @html_tag_token    = HtmlTagToken.new
+    @pre_element_token = HtmlPreElementHideHook.new
   end
 
   # TabHideHook
@@ -23,6 +24,11 @@ class TestTransformations < Minitest::Test
 
     test_string = File.read('./tests/assets/sbc.html')
     assert_equal( test_string, @html_tag_token.process( test_string ), "TabHideHook has side-effects.")
+  end
+
+  def test_HtmlPreElementHideHook
+    test_string = File.read('./tests/assets/pre.html')
+    assert_equal( test_string, @pre_element_token.process( test_string ), "HtmlPreElementHideHook has side-effects.")
   end
 
 end
