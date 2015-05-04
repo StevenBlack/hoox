@@ -1,4 +1,8 @@
+require "hoox/version"
+
+# stdlib
 require 'securerandom'
+
 
 module Hoox
   # Public: The highest-level self-referential and chainable hook class wherein

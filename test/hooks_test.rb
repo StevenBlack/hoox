@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require './hoox'
+require 'minitest_helper'
 
 class TestAnchor < Minitest::Test
 
@@ -7,6 +6,11 @@ class TestAnchor < Minitest::Test
     @vanillahook   = Hoox::Hook.new
     @vanillaanchor = Hoox::Anchor.new
     @vanillaparser = Hoox::ParserHook.new
+  end
+
+  # Do we have a version number
+  def test_that_it_has_a_version_number
+    refute_nil ::Hoox::VERSION
   end
 
   # VANILLA HOOKS

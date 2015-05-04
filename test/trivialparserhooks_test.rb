@@ -1,11 +1,10 @@
-require 'minitest/autorun'
-require './trivialparserhooks.rb'
+require 'minitest_helper'
 
 class TestTrivialHooks < Minitest::Test
 
   def setup
-    @lower_hook   = LowerHook.new
-    @upper_hook   = UpperHook.new
+    @lower_hook   = Hoox::LowerHook.new
+    @upper_hook   = Hoox::UpperHook.new
   end
 
   # VANILLA HOOKS

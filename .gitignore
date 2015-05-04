@@ -1,3 +1,9 @@
-tests/assets/muck.rb
-*.webloc
-foo*.rb
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
