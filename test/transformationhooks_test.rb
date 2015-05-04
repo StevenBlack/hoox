@@ -10,10 +10,10 @@ class TestTransformations < Minitest::Test
 
   # TabHideHook
   def test_tab_hide_hook
-  	test_string = "\t\tShort,\tsharp,\tshocked"
+    test_string = "\t\tShort,\tsharp,\tshocked"
     assert_equal( test_string, @tab_hide_hook.process( test_string ), "TabHideHook has side-effects.")
 
-  	test_string = File.read('./test/assets/sbc.html')
+    test_string = File.read('./test/assets/sbc.html')
     assert_equal( test_string, @tab_hide_hook.process( test_string ), "TabHideHook has side-effects.")
   end
 
