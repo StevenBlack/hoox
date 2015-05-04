@@ -81,7 +81,6 @@ module Hoox
     end
   end
 
-
   # Public: HookAnchor can carry several hook chains and can serve to anchor a
   # directed graph of hooks.
   class Anchor < Hook
@@ -128,8 +127,8 @@ module Hoox
     @@token_suffix = " --> "
 
     def initialize(*args)
-      super(*args)
-      @matches      = Hash.new
+      @matches = Hash.new
+      super
     end
 
     # Remove all HTML tags
