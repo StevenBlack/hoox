@@ -14,39 +14,43 @@ module Hoox
   #   # => some_transformed_text
   class Hook
 
-    # Internal: The @oHook member is designed to hold other instances of this
-    # type, thus making all hooks potentially self-referential
-    @oHook = nil
+    def initialize
+      # Internal: The @oHook member is designed to hold other instances of this
+      # type, thus making all hooks potentially self-referential
+      @oHook = nil
+    end
+
+    def applies( arg )
+      true
+    end
 
     # Public: The main method for hooks.  The process method delegates to this
     # instance's execute method, then delegates down the hook chain.
-    def process(arg)
-      ret = preprocess(arg)
-      if ret
-        ret = execute(ret)
+    def process( arg )
+      if applies( arg )
+          execute( preprocess( arg ))
       end
-
       if ! @hook.nil?
-        ret = @hook.process(ret)
+        @hook.process( arg )
       end
-      postprocess(ret)
+      postprocess( arg )
     end
 
     # Internal: The preprocess method fires before the execute method and
     # ultimately determines if the execute method fires at all.
-    def preprocess(arg)
+    def preprocess( arg )
       # Override to implement whether this hook executes
       arg
     end
 
     # Internal: The postprocess method fires after the hook chain processes
     # returns.  This is a good place for cleanup code.
-    def postprocess(arg)
+    def postprocess( arg )
       arg
     end
 
     # Internal: This is where the meat of the hook lives.
-    def execute(arg)
+    def execute( arg )
       # Implement the hook here
       arg
     end
@@ -57,27 +61,27 @@ module Hoox
     def sethook(*args)
       args.each { |arg|
         return if arg.nil?
-        arg = resolve_to_hook(arg)
+        arg = resolve_to_hook( arg )
         return if arg.nil?  # Which it could be.
         case
         when @hook.nil?
           @hook = arg    # hook stays here
-        when @hook.is_a?(Hook)
-          @hook.sethook(arg)  # Delegate immediately
+        when @hook.is_a?( Hook )
+          @hook.sethook( arg )  # Delegate immediately
         end
       }
     end
 
     # Internal: Pass it a hook instance or a string and, in the case of string,
     # creates a hook of that class bame.
-    def resolve_to_hook(arg)
+    def resolve_to_hook( arg )
       ret = nil
       case
-      when arg.is_a?(Hook)
+      when arg.is_a?( Hook )
         ret = arg
-      when arg.is_a?(String) && Kernel.const_defined?(arg)
-        tmp = Kernel.const_get(arg).new
-        if tmp.is_a?(Hook)
+      when arg.is_a?( String ) && Kernel.const_defined?( arg )
+        tmp = Kernel.const_get( arg ).new
+        if tmp.is_a?( Hook )
           ret = tmp
         end
       end
@@ -90,10 +94,11 @@ module Hoox
   class Anchor < Hook
     attr_accessor :ahook
 
-    def initialize(*args)
+    def initialize( *args )
+      super
       self.ahook = [] # on object creation initialize this to an array
       args.each { |arg|
-        arg = resolve_to_hook(arg)
+        arg = resolve_to_hook( arg )
         if ! arg.nil?
           self.ahook << arg
         end
@@ -101,10 +106,10 @@ module Hoox
     end
 
     # Internal: Anchors execute by firing upon its array of hooks.
-    def execute(arg)
+    def execute( arg )
       @ahook.each { | hook |
         if hook.is_a?(Hook)
-          arg.gsub!(hook.process(arg))
+          arg.gsub!(hook.process( arg ))
         end
       }
       arg
@@ -113,16 +118,6 @@ module Hoox
 
   # Public: ParserHooks specialize in processing text.
   class ParserHook < Hook
-    # Public: The main method for ParserHooks.  We assume the argument is text.
-    def process(arg)
-      if  preprocess(arg)
-        arg.gsub!(execute(arg))
-      end
-      if ! @hook.nil?
-        arg.gsub!(arg,@hook.process(arg))
-      end
-      arg.gsub!(arg,postprocess(arg))
-    end
   end
 
   # Publlic: Regex-based hider parser hook
@@ -131,12 +126,12 @@ module Hoox
     @@token_suffix = " --> "
 
     def initialize(*args)
-      @matches = Hash.new
       super
+      @matches = Hash.new
     end
 
     # Remove all HTML tags
-    def preprocess(arg)
+    def preprocess( arg )
       if @regex
         next_match = arg[/#{@regex}/im ]
         while next_match
@@ -151,7 +146,7 @@ module Hoox
     end
 
     # Restore all HTML tags
-    def postprocess(arg)
+    def postprocess( arg )
       @matches.keys.each{ |k|
         arg.gsub!( @@token_prefix + k + @@token_suffix, @matches[k] )
       }
