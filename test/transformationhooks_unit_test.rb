@@ -13,7 +13,7 @@ class TestTransformations < Minitest::Test
     test_string = "\t\tShort,\tsharp,\tshocked"
     assert_equal( test_string, @tab_hide_hook.process( test_string ), "TabHideHook has side-effects.")
 
-    test_string = File.read('./test/assets/sbc.html')
+    test_string = File.read('./test/fixtures/sbc.html')
     assert_equal( test_string, @tab_hide_hook.process( test_string ), "TabHideHook has side-effects.")
   end
 
@@ -21,12 +21,12 @@ class TestTransformations < Minitest::Test
     test_string = "\t\tShort,\tsharp,\tshocked"
     assert_equal( test_string, @html_tag_token.process( test_string ), "TabHideHook has side-effects.")
 
-    test_string = File.read('./test/assets/sbc.html')
+    test_string = File.read('./test/fixtures/sbc.html')
     assert_equal( test_string, @html_tag_token.process( test_string ), "TabHideHook has side-effects.")
   end
 
   def test_HtmlPreElementHideHook
-    test_string = File.read('./test/assets/pre.html')
+    test_string = File.read('./test/fixtures/pre.html')
     assert_equal( test_string, @pre_element_token.process( test_string ), "HtmlPreElementHideHook has side-effects.")
   end
 
