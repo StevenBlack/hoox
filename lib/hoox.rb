@@ -20,6 +20,7 @@ module Hoox
       @oHook = nil
     end
 
+    # Public: Use this method to short-circuit the hook if it doesn't apply.
     def applies( arg )
       true
     end
