@@ -117,17 +117,12 @@ module Hoox
     end
   end
 
-  # Public: ParserHooks specialize in processing text.
-  class ParserHook < Hook
-  end
-
-  # Publlic: Regex-based hider parser hook
-  class RegexHideParserhook < Hoox::ParserHook
-    @@token_prefix = " <!-- "
-    @@token_suffix = " --> "
-
+  # Publlic: Regex-based hider hook
+  class RegexHideHook < Hoox::Hook
     def initialize(*args)
       super
+      @@token_prefix = " <!-- "
+      @@token_suffix = " --> "
       @matches = Hash.new
     end
 

@@ -1,6 +1,6 @@
 module Hoox
-  # Public: A parser hook to tokenize tab symbols before hook delegation
-  class TabHideHook < Hoox::ParserHook
+  # Public: A hook to tokenize tab symbols before hook delegation
+  class TabHideHook < Hoox::Hook
     def initialize
       # The token to substitite for tabs
       @tab_subst="~!~ "
@@ -23,7 +23,7 @@ module Hoox
 
   # Public: Strip away pre code tags for processing, and
   # restore upon exit
-  class HtmlPreElementHideHook < Hoox::RegexHideParserhook
+  class HtmlPreElementHideHook < Hoox::RegexHideHook
     def initialize
       # The token to substitite for pre elements
       @regex = "<pre.*?<\/pre>"
@@ -32,8 +32,7 @@ module Hoox
   end
 
   # Publlic: Hide all HTML tags from downstream hooks
-  class HtmlTagToken < Hoox::RegexHideParserhook
-
+  class HtmlTagToken < Hoox::RegexHideHook
     def initialize
       # The token to substitite for tabs
       @regex  = "/<\/?[^>]*?>/"
