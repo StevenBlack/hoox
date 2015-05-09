@@ -8,3 +8,4 @@ require 'hoox'
 # Implementation examples
 require 'trivialparserhooks'
 require 'transformationhooks'
+require 'markdownhooks'
