@@ -12,13 +12,30 @@ module Hoox
     def execute( arg )
       arg.gsub!( /\!??\[(.*?)\]\((.*?)\)/ ) { |m|
         r = Regexp.last_match
-        matchstr = r.to_s
+        c1 = r[1]
+        c2 = r[2]
+        c3 = nil
+        # If we have anciliary text...
+        if c2.scan(/(?<=").+?(?=")/m).length == 1
+          # Islate it into c3
+          c3 = c2.scan(/(?<=").+?(?=")/m)[0]
+          c2 = c2.sub( "\"#{c3}\"", "" ).strip
+        end
+
         case
-        when matchstr[0] == "!"
+        when r[0][0] == "!"
           # we have an image
-          m = "<img src=\"#{$2}\" title=\"#{$1}\" />"
+          if c3
+            m = "<img src=\"#{c2}\" title=\"#{c1}\ alt=\"#{c3}\" />"
+          else
+            m = "<img src=\"#{c2}\" title=\"#{c1}\" />"
+          end
         else
-          m = "<a href=\"#{$2}\">#{$1}</a>"
+          if c3
+            m = "<a href=\"#{c2}\" title=\"#{c3}\">#{c1}</a>"
+          else
+            m = "<a href=\"#{c2}\">#{c1}</a>"
+          end
         end
       }
       arg
